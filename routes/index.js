@@ -18,8 +18,9 @@ router.post('/search-items', async function (req, res, next) {
     const categories = req.body['categories'];
     let sites = req.body['sites'];
     const keyword = req.body['keyword'];
-    const min_price = req.body['min_price'];
-    const max_price = req.body['max_price'];
+    const minPrice = req.body['minPrice'];
+    const maxPrice = req.body['maxPrice'];
+    const pageIdx = req.body['pageIdx'] || 1;
 
     sites = await Site.findAll({ where: { id: { [op.in]: sites } } });
     sites = sites.map(site => site.site);
@@ -29,27 +30,29 @@ router.post('/search-items', async function (req, res, next) {
         where['site'] = { [op.in]: sites }
 
     if (keyword) {
-        const col_names = ['item', 'category'];
-
-        col_names.map(col_name => {
-            where[col_name] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col(col_name)), 'LIKE', '%' + keyword.toLowerCase() + '%');
+        ['item', 'category'].map(colName => {
+            where[colName] = Sequelize.where(Sequelize.fn('LOWER', Sequelize.col(colName)), 'LIKE', '%' + keyword.toLowerCase() + '%');
         });
     }
 
-    if (min_price && max_price) {
-        where['price'] = { [op.between]: [min_price, max_price] }
-    } else if (min_price) {
-        where['price'] = { [op.gte]: min_price }
-    } else if (max_price) {
-        where['price'] = { [op.lte]: max_price }
+    if (minPrice && maxPrice) {
+        where['price'] = { [op.between]: [minPrice, maxPrice] }
+    } else if (minPrice) {
+        where['price'] = { [op.gte]: minPrice }
+    } else if (maxPrice) {
+        where['price'] = { [op.lte]: maxPrice }
     }
 
     let items = await Item.findAll({
         where,
-        limit: 10
+        limit: 10,
+        offset: 10 * (pageIdx - 1)
     });
 
-    res.status(200).send(items)
+    const totalCount = await Item.count({ where });
+    const totalPages = Math.ceil(totalCount / 10);
+
+    res.status(200).send({ items, pageIdx: pageIdx, totalPages: totalPages })
 });
 
 module.exports = router;
