@@ -5,8 +5,6 @@ const models = require('./models');
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-
-
 models.sequelize.sync().then(function () {
     const app = express();
     app.use(cors());
