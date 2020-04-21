@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         created: { type: DataTypes.STRING, allowNull: true },
         updated: { type: DataTypes.STRING, allowNull: true }
     }, {
+        timestamps: false,
         underscored: true,
         tableName: 'pt_history',
     });

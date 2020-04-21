@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         file: DataTypes.TEXT,
         status: DataTypes.TEXT
     }, {
+        timestamps: false,
         underscored: true,
         tableName: 'queue',
     });

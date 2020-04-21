@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/get-sites', async function (req, res, next) {
-    const sites = await Site.findAll();
+    const sites = await Site.findAll({ where: { 'status': 'active' } });
     res.status(200).send(sites);
 });
 

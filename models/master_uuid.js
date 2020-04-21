@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         created: DataTypes.TEXT,
         updated: DataTypes.TEXT,
     }, {
+        timestamps: false,
         underscored: true,
         tableName: 'master_uuid',
     });

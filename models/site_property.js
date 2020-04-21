@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         active: DataTypes.TEXT,
         description: DataTypes.TEXT
     }, {
+        timestamps: false,
         underscored: true,
         tableName: 'site_properties',
     });
