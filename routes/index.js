@@ -50,9 +50,9 @@ router.post('/search-items', async function (req, res, next) {
     });
 
     const totalCount = await Item.count({ where });
-    const totalPages = Math.ceil(totalCount / 10);
+    // const totalPages = Math.ceil(totalCount / 10);
 
-    res.status(200).send({ items, pageIdx: pageIdx, totalPages: totalPages })
+    res.status(200).send({ items, pageIdx: pageIdx, totalCount: totalCount })
 });
 
 module.exports = router;
