@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
     res.send('API Server is running.')
 });
 
-router.get('/get-sites', async function (req, res, next) {
+router.get('/sites', async function (req, res, next) {
     const sites = await Site.findAll({ where: { 'status': 'active' } });
     res.status(200).send(sites);
 });
