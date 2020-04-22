@@ -54,7 +54,7 @@ router.post('/search-items', async function (req, res, next) {
     res.status(200).send({ items, pageIdx: pageIdx, totalCount: totalCount })
 });
 
-router.get('/get-user-list', async function (req, res, next) {
+router.get('/user-list', async function (req, res, next) {
     const userId = req.body['userId'];
 
     if (userId) {
@@ -66,7 +66,20 @@ router.get('/get-user-list', async function (req, res, next) {
     }
 });
 
-router.post('/create-user-list', async function (req, res, next) {
+router.delete('/user-list', async function (req, res, next) {
+    const id = req.body['id'];
+    const userId = req.body['userId'];
+
+    if (id && userId) {
+        await UserList.destroy({ where: { id: id, user_id: userId } });
+
+        res.status(200).send({});
+    } else {
+        res.status(500).send("id or userId is not provided.");
+    }
+});
+
+router.post('/user-list', async function (req, res, next) {
     const userId = req.body['userId'];
 
     if (userId) {
