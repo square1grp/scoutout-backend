@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const op = Sequelize.Op;
 
 var router = express.Router();
-var { Site, Item } = require('../models');
+var { Site, Item, UserList } = require('../models');
 
 router.get('/', function (req, res, next) {
     res.send('API Server is running.')
@@ -50,9 +50,32 @@ router.post('/search-items', async function (req, res, next) {
     });
 
     const totalCount = await Item.count({ where });
-    // const totalPages = Math.ceil(totalCount / 10);
 
     res.status(200).send({ items, pageIdx: pageIdx, totalCount: totalCount })
+});
+
+router.get('/get-user-list', async function (req, res, next) {
+    const userId = req.body['userId'];
+
+    if (userId) {
+        const userLists = await UserList.findAll({ where: { user_id: userId } });
+
+        res.status(200).send(userLists);
+    } else {
+        res.status("500").send("userId is empty.");
+    }
+});
+
+router.post('/create-user-list', async function (req, res, next) {
+    const userId = req.body['userId'];
+
+    if (userId) {
+        const userList = await UserList.create({ user_id: userId });
+
+        res.status(200).send(userList);
+    } else {
+        res.status("500").send("userId is empty.");
+    }
 });
 
 module.exports = router;
