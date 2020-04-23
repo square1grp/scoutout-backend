@@ -119,4 +119,13 @@ router.post('/user-list/add-items', async function (req, res, next) {
     res.status(200).send(items)
 });
 
+router.delete('/user-list/delete-item', async function (req, res, next) {
+    const listId = req.body['listId'];
+    const itemId = req.body['itemId'];
+
+    await UserListItem.destroy({ where: { list_id: listId, item_id: itemId } });
+
+    res.status(200).send({});
+});
+
 module.exports = router;
