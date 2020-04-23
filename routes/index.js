@@ -1,12 +1,30 @@
 var express = require('express');
 const Sequelize = require('sequelize');
 const op = Sequelize.Op;
+const bcrypt = require('bcrypt');
+// const saltRounds = 8;
+
 
 var router = express.Router();
-var { Site, Item, UserList, UserListItem } = require('../models');
+var { Site, Item, User, UserList, UserListItem } = require('../models');
 
 router.get('/', function (req, res, next) {
     res.send('API Server is running.')
+});
+
+router.post('/login', async function (req, res, next) {
+    const username = req.body['username'];
+    const password = req.body['password'];
+
+    const user = await User.findOne({ where: { 'username': username } });
+
+    bcrypt.compare(password, user.hashed_password, function (err, result) {
+        if (result)
+            res.status(200).send({ user_id: user.id });
+        else
+            res.status(500).send("Wrong credentials");
+    });
+
 });
 
 router.get('/sites', async function (req, res, next) {
