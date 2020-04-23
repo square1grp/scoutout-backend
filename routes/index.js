@@ -108,9 +108,7 @@ router.post('/user-list/add-items', async function (req, res, next) {
     const listId = req.body['listId'];
     const itemIds = req.body['itemIds'];
 
-    itemIds.forEach(async (itemId) => {
-        await UserListItem.findOrCreate({ where: { list_id: listId, item_id: itemId } })
-    });
+    await Promise.all(itemIds.map((itemId) => UserListItem.findOrCreate({ where: { list_id: listId, item_id: itemId } })));
 
     userListItems = await UserListItem.findAll({ where: { list_id: listId }, include: [Item] });
 
