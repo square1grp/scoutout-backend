@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const op = Sequelize.Op;
 
 var router = express.Router();
-var { Site, Item, UserList } = require('../models');
+var { Site, Item, UserList, UserListItem } = require('../models');
 
 router.get('/', function (req, res, next) {
     res.send('API Server is running.')
@@ -45,8 +45,8 @@ router.post('/search-items', async function (req, res, next) {
 
     let items = await Item.findAll({
         where,
-        limit: 10,
-        offset: 10 * (pageIdx - 1)
+        limit: 25,
+        offset: 25 * (pageIdx - 1)
     });
 
     const totalCount = await Item.count({ where });
@@ -55,14 +55,27 @@ router.post('/search-items', async function (req, res, next) {
 });
 
 router.get('/user-list', async function (req, res, next) {
-    const userId = req.body['userId'];
+    const userId = req.query['userId'];
 
     if (userId) {
-        const userLists = await UserList.findAll({ where: { user_id: userId } });
+        const _userLists = await UserList.findAll({ where: { user_id: userId } });
+        const userLists = await Promise.all(_userLists.map(async (userList) => {
+            userListItems = await UserListItem.findAll({ where: { list_id: userList.id }, include: [Item] });
+
+            const items = userListItems.map(userListItem => {
+                return userListItem.Item;
+            })
+
+            return {
+                id: userList.id,
+                user_id: userList.user_id,
+                items: items
+            }
+        }));
 
         res.status(200).send(userLists);
     } else {
-        res.status("500").send("userId is empty.");
+        res.status(500).send([]);
     }
 });
 
@@ -87,8 +100,25 @@ router.post('/user-list', async function (req, res, next) {
 
         res.status(200).send(userList);
     } else {
-        res.status("500").send("userId is empty.");
+        res.status(500).send("userId is empty.");
     }
+});
+
+router.post('/user-list/add-items', async function (req, res, next) {
+    const listId = req.body['listId'];
+    const itemIds = req.body['itemIds'];
+
+    itemIds.forEach(async (itemId) => {
+        await UserListItem.findOrCreate({ where: { list_id: listId, item_id: itemId } })
+    });
+
+    userListItems = await UserListItem.findAll({ where: { list_id: listId }, include: [Item] });
+
+    const items = userListItems.map(userListItem => {
+        return userListItem.Item;
+    })
+
+    res.status(200).send(items)
 });
 
 module.exports = router;

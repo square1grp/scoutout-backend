@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   UserListItem.associate = function (models) {
     // associations can be defined here
     // belongs to user
+
+    this.belongsTo(models.Item)
   };
   return UserListItem;
 };

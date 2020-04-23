@@ -2,10 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
     var Item = sequelize.define('Item', {
         id: {
-          allowNull: false,
-          autoIncrement: true,
-          primaryKey: true,
-          type: DataTypes.INTEGER
+            allowNull: false,
+            autoIncrement: true,
+            primaryKey: true,
+            type: DataTypes.INTEGER
         },
         master_uuid: { type: DataTypes.TEXT, unique: true },
         site: DataTypes.TEXT,
