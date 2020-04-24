@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 
 
 var router = express.Router();
-var { Site, Item, User, UserList, UserListItem } = require('../models');
+var { Site, Item, User, UserList, UserListItem, PTHistory } = require('../models');
 
 router.get('/', function (req, res, next) {
     res.send('API Server is running.')
@@ -61,11 +61,17 @@ router.post('/search-items', async function (req, res, next) {
         where['price'] = { [op.lte]: maxPrice }
     }
 
-    let items = await Item.findAll({
+    let _items = await Item.findAll({
         where,
         limit: 25,
         offset: 25 * (pageIdx - 1)
     });
+
+    items = await Promise.all(_items.map(async (_item) => {
+        const histories = await PTHistory.findAll({ where: { master_uuid: _item.master_uuid } });
+
+        return Object.assign(_item.toJSON(), { histories });
+    }));
 
     const totalCount = await Item.count({ where });
 

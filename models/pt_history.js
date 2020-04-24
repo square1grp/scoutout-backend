@@ -8,16 +8,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER
         },
         master_uuid: DataTypes.STRING,
-        site: { type: DataTypes.STRING, unique: true },
+        site: { type: DataTypes.STRING},
         item: DataTypes.STRING,
         brand: { type: DataTypes.STRING, allowNull: true },
-        price: { type: DataTypes.DECIMAL, unique: true },
+        price: { type: DataTypes.DECIMAL},
         currency: { type: DataTypes.STRING, allowNull: true },
         price_per: { type: DataTypes.DECIMAL, allowNull: true },
         per: { type: DataTypes.STRING, allowNull: true },
         plu: { type: DataTypes.STRING, allowNull: true },
         model: { type: DataTypes.STRING, allowNull: true },
-        sku: { type: DataTypes.STRING, unique: true },
+        sku: { type: DataTypes.STRING},
         item_url: { type: DataTypes.STRING, allowNull: true },
         source_url: { type: DataTypes.STRING, allowNull: true },
         img_src: { type: DataTypes.STRING, allowNull: true },
@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
         created: { type: DataTypes.STRING, allowNull: true },
         updated: { type: DataTypes.STRING, allowNull: true }
     }, {
+        indexes: [{
+            unique: true,
+            fields: ['site', 'sku', 'price']
+        }],
         timestamps: false,
         underscored: true,
         tableName: 'pt_history',
