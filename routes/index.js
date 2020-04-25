@@ -33,7 +33,8 @@ router.post('/login', async function (req, res, next) {
 router.post('/verify-token', async function (req, res, next) {
     const token = req.body['token'];
 
-    const user = jwt.verify(token, 'scoutout-auth');
+    const user = token ? jwt.verify(token, 'scoutout-auth') : {};
+
     if (user.user_id) {
         res.status(200).send({ user_id: user.user_id });
     } else {
