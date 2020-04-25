@@ -4,6 +4,7 @@ const op = Sequelize.Op;
 const bcrypt = require('bcrypt');
 // const saltRounds = 8;
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 
 var router = express.Router();
@@ -105,6 +106,7 @@ router.get('/user-list', async function (req, res, next) {
 
             return {
                 id: userList.id,
+                name: userList.name,
                 user_id: userList.user_id,
                 items: items
             }
@@ -133,7 +135,7 @@ router.post('/user-list', async function (req, res, next) {
     const userId = req.body['userId'];
 
     if (userId) {
-        const userList = await UserList.create({ user_id: userId });
+        const userList = await UserList.create({ user_id: userId, name: `My List ${moment().format("L")}` });
 
         res.status(200).send(userList);
     } else {
@@ -164,5 +166,14 @@ router.delete('/user-list/delete-item', async function (req, res, next) {
 
     res.status(200).send({});
 });
+
+router.post('/user-list/change-name', async function (req, res, next) {
+    const listId = req.body['listId'];
+    const listName = req.body['listName'];
+
+    const isUpdated = await UserList.update({ name: listName }, { where: { id: listId } });
+
+    res.status(isUpdated ? 200 : 500).send({});
+})
 
 module.exports = router;

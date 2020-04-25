@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     user_id: DataTypes.INTEGER,
+    name: DataTypes.TEXT
   }, {
     timestamps: false,
     underscored: true,
