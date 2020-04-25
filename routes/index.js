@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 const op = Sequelize.Op;
 const bcrypt = require('bcrypt');
 // const saltRounds = 8;
+const jwt = require('jsonwebtoken');
 
 
 var router = express.Router();
@@ -18,13 +19,25 @@ router.post('/login', async function (req, res, next) {
 
     const user = await User.findOne({ where: { 'username': username } });
 
+    const token = jwt.sign({ user_id: user.id, username: user.username }, 'scoutout-auth');
+
     bcrypt.compare(password, user.hashed_password, function (err, result) {
         if (result)
-            res.status(200).send({ user_id: user.id });
+            res.status(200).send({ user_id: user.id, token: token });
         else
             res.status(500).send("Wrong credentials");
     });
+});
 
+router.post('/verify-token', async function (req, res, next) {
+    const token = req.body['token'];
+
+    const user = jwt.verify(token, 'scoutout-auth');
+    if (user.user_id) {
+        res.status(200).send({ user_id: user.user_id });
+    } else {
+        res.status(500);
+    }
 });
 
 router.get('/sites', async function (req, res, next) {
