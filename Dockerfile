@@ -1,4 +1,4 @@
-FROM node
+FROM node:lts-alpine
 
 ARG NODE_ENV
 ARG PGHOST
@@ -23,4 +23,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD [ "nodemon", "app.js" ]
+CMD [ "node", "app.js" ]
