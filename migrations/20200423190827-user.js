@@ -17,7 +17,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      email: Sequelize.TEXT,
+      email: { type: Sequelize.TEXT, unique: true },
       username: Sequelize.TEXT,
       firstname: Sequelize.TEXT,
       lastname: Sequelize.TEXT,

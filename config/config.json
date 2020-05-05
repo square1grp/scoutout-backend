@@ -2,7 +2,7 @@
   "development": {
     "username": "postgres",
     "password": "postgres",
-    "database": "scoutout",
+    "database": "scoutout_development",
     "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres",
