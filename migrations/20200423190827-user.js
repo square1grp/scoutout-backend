@@ -17,7 +17,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      email: Sequelize.TEXT,
       username: Sequelize.TEXT,
+      firstname: Sequelize.TEXT,
+      lastname: Sequelize.TEXT,
       hashed_password: Sequelize.TEXT
     });
   },

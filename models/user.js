@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    email: DataTypes.TEXT,
     username: DataTypes.TEXT,
+    firstname: DataTypes.TEXT,
+    lastname: DataTypes.TEXT,
     hashed_password: DataTypes.TEXT
   }, {
     timestamps: false,
